@@ -1,5 +1,5 @@
 {
   "framework": "vite",
-  "outputDirectory": "src/client/dist"
+  "outputDirectory": "dist"
 }
 

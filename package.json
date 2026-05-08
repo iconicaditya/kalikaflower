@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --outDir ../../dist",
     "preview": "vite preview",
     "start": "vercel dev",
     "seed": "tsx src/server/scripts/seed.ts",
