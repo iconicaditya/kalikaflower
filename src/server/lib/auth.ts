@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { parse as parseCookie, serialize as serializeCookie } from 'cookie';
-import { env, isProd } from './env';
+import { isProd, requireSessionSecret } from './env';
 import { sql } from './db';
 
 const SESSION_COOKIE = 'gph_session';
@@ -20,7 +20,7 @@ function fromB64(data: string): string {
 }
 
 function sign(value: string): string {
-  return createHmac('sha256', env.SESSION_SECRET).update(value).digest('base64url');
+  return createHmac('sha256', requireSessionSecret()).update(value).digest('base64url');
 }
 
 function encode(payload: SessionPayload): string {
