@@ -1,22 +1,22 @@
-import { fail } from '@/server/lib/http';
+import { fail } from '../src/server/lib/http';
 
 type RouteHandler = (request: Request) => Promise<Response>;
 type RouteLoader = () => Promise<{ default: RouteHandler }>;
 
 const ROUTES: Record<string, RouteLoader> = {
-  listPlants: () => import('@/server/handlers/nursery/listPlants'),
-  getPlant: () => import('@/server/handlers/nursery/getPlant'),
-  relatedPlants: () => import('@/server/handlers/nursery/relatedPlants'),
-  getReviews: () => import('@/server/handlers/nursery/getReviews'),
-  listTestimonials: () => import('@/server/handlers/nursery/listTestimonials'),
-  getCart: () => import('@/server/handlers/nursery/getCart'),
-  addToCart: () => import('@/server/handlers/nursery/addToCart'),
-  updateCartItem: () => import('@/server/handlers/nursery/updateCartItem'),
-  clearCart: () => import('@/server/handlers/nursery/clearCart'),
-  submitReview: () => import('@/server/handlers/nursery/submitReview'),
-  placeOrder: () => import('@/server/handlers/nursery/placeOrder'),
-  subscribeNewsletter: () => import('@/server/handlers/nursery/subscribeNewsletter'),
-  sendContact: () => import('@/server/handlers/nursery/sendContact'),
+  listPlants: () => import('../src/server/handlers/nursery/listPlants'),
+  getPlant: () => import('../src/server/handlers/nursery/getPlant'),
+  relatedPlants: () => import('../src/server/handlers/nursery/relatedPlants'),
+  getReviews: () => import('../src/server/handlers/nursery/getReviews'),
+  listTestimonials: () => import('../src/server/handlers/nursery/listTestimonials'),
+  getCart: () => import('../src/server/handlers/nursery/getCart'),
+  addToCart: () => import('../src/server/handlers/nursery/addToCart'),
+  updateCartItem: () => import('../src/server/handlers/nursery/updateCartItem'),
+  clearCart: () => import('../src/server/handlers/nursery/clearCart'),
+  submitReview: () => import('../src/server/handlers/nursery/submitReview'),
+  placeOrder: () => import('../src/server/handlers/nursery/placeOrder'),
+  subscribeNewsletter: () => import('../src/server/handlers/nursery/subscribeNewsletter'),
+  sendContact: () => import('../src/server/handlers/nursery/sendContact'),
 };
 
 function getRoute(request: Request) {
@@ -39,4 +39,5 @@ export default async function handler(request: Request) {
     return fail((error as Error).message || 'Internal server error', 500);
   }
 }
+
 

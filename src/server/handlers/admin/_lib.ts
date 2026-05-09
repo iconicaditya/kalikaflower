@@ -1,6 +1,6 @@
-import { getSessionUser, requireAdmin } from '@/server/lib/auth';
-import { sql } from '@/server/lib/db';
-import { fail, readJson } from '@/server/lib/http';
+import { getSessionUser, requireAdmin } from '../../lib/auth';
+import { sql } from '../../lib/db';
+import { fail, readJson } from '../../lib/http';
 
 export async function requireAdminRequest(request: Request) {
   if (request.method !== 'POST') {
@@ -100,4 +100,5 @@ export async function recomputePlantRating(plantId: string) {
     where id = ${plantId}
   `;
 }
+
 

@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary';
-import { requireCloudinaryEnv } from '@/server/lib/env';
-import { fail, ok } from '@/server/lib/http';
+import { requireCloudinaryEnv } from '../../lib/env';
+import { fail, ok } from '../../lib/http';
 import { parseBody, requireAdminRequest } from './_lib';
 
 type Body = {
@@ -48,4 +48,5 @@ export default async function handler(request: Request) {
     return fail((error as Error).message || 'Unable to upload image', 500);
   }
 }
+
 

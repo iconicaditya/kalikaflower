@@ -1,5 +1,5 @@
-import { sql } from '@/server/lib/db';
-import { fail, ok } from '@/server/lib/http';
+import { sql } from '../../lib/db';
+import { fail, ok } from '../../lib/http';
 import { parseBody, requireAdminRequest } from './_lib';
 
 type Body = {
@@ -33,4 +33,5 @@ export default async function handler(request: Request) {
     return fail((error as Error).message || 'Unable to update order status', 500);
   }
 }
+
 

@@ -1,5 +1,5 @@
-import { getSessionUser } from '@/server/lib/auth';
-import { fail, ok } from '@/server/lib/http';
+import { getSessionUser } from '../../lib/auth';
+import { fail, ok } from '../../lib/http';
 
 export default async function handler(request: Request) {
   if (request.method !== 'POST') {
@@ -13,4 +13,5 @@ export default async function handler(request: Request) {
     return fail((error as Error).message || 'Unable to read session', 500);
   }
 }
+
 

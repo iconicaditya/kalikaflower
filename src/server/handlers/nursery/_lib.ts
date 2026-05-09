@@ -1,5 +1,5 @@
-import { sql } from '@/server/lib/db';
-import { fail, readJson } from '@/server/lib/http';
+import { sql } from '../../lib/db';
+import { fail, readJson } from '../../lib/http';
 
 export type PlantRow = {
   id: string;
@@ -111,4 +111,5 @@ export async function getCartWithPlants(sessionId: string) {
     plantMap: new Map(plants.map((p) => [p.slug, p])),
   };
 }
+
 

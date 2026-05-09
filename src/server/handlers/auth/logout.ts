@@ -1,5 +1,5 @@
-import { clearSessionCookie } from '@/server/lib/auth';
-import { fail, ok } from '@/server/lib/http';
+import { clearSessionCookie } from '../../lib/auth';
+import { fail, ok } from '../../lib/http';
 
 export default async function handler(request: Request) {
   if (request.method !== 'POST') {
@@ -15,4 +15,5 @@ export default async function handler(request: Request) {
     }
   );
 }
+
 

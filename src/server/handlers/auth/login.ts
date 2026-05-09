@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
-import { buildSessionCookie } from '@/server/lib/auth';
-import { sql } from '@/server/lib/db';
-import { fail, ok, readJson } from '@/server/lib/http';
+import { buildSessionCookie } from '../../lib/auth';
+import { sql } from '../../lib/db';
+import { fail, ok, readJson } from '../../lib/http';
 
 type LoginBody = {
   email?: string;
@@ -67,4 +67,5 @@ export default async function handler(request: Request) {
     return fail((error as Error).message || 'Unable to login', 500);
   }
 }
+
 

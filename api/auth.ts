@@ -1,13 +1,13 @@
-import { fail } from '@/server/lib/http';
+import { fail } from '../src/server/lib/http';
 
 type RouteHandler = (request: Request) => Promise<Response>;
 type RouteLoader = () => Promise<{ default: RouteHandler }>;
 
 const ROUTES: Record<string, RouteLoader> = {
-  login: () => import('@/server/handlers/auth/login'),
-  signup: () => import('@/server/handlers/auth/signup'),
-  session: () => import('@/server/handlers/auth/session'),
-  logout: () => import('@/server/handlers/auth/logout'),
+  login: () => import('../src/server/handlers/auth/login'),
+  signup: () => import('../src/server/handlers/auth/signup'),
+  session: () => import('../src/server/handlers/auth/session'),
+  logout: () => import('../src/server/handlers/auth/logout'),
 };
 
 function getRoute(request: Request) {
@@ -30,4 +30,5 @@ export default async function handler(request: Request) {
     return fail((error as Error).message || 'Internal server error', 500);
   }
 }
+
 

@@ -1,5 +1,5 @@
-import { sql } from '@/server/lib/db';
-import { fail, ok } from '@/server/lib/http';
+import { sql } from '../../lib/db';
+import { fail, ok } from '../../lib/http';
 import { requirePost } from './_lib';
 
 type Row = {
@@ -39,4 +39,5 @@ export default async function handler(request: Request) {
     return fail((error as Error).message || 'Unable to list testimonials', 500);
   }
 }
+
 

@@ -1,28 +1,28 @@
-import { fail } from '@/server/lib/http';
+import { fail } from '../src/server/lib/http';
 
 type RouteHandler = (request: Request) => Promise<Response>;
 type RouteLoader = () => Promise<{ default: RouteHandler }>;
 
 const ROUTES: Record<string, RouteLoader> = {
-  overview: () => import('@/server/handlers/admin/overview'),
-  listPlants: () => import('@/server/handlers/admin/listPlants'),
-  getPlant: () => import('@/server/handlers/admin/getPlant'),
-  listOrders: () => import('@/server/handlers/admin/listOrders'),
-  getOrder: () => import('@/server/handlers/admin/getOrder'),
-  listReviews: () => import('@/server/handlers/admin/listReviews'),
-  listTestimonials: () => import('@/server/handlers/admin/listTestimonials'),
-  listSubscribers: () => import('@/server/handlers/admin/listSubscribers'),
-  listMessages: () => import('@/server/handlers/admin/listMessages'),
-  createPlant: () => import('@/server/handlers/admin/createPlant'),
-  updatePlant: () => import('@/server/handlers/admin/updatePlant'),
-  deletePlant: () => import('@/server/handlers/admin/deletePlant'),
-  updateOrderStatus: () => import('@/server/handlers/admin/updateOrderStatus'),
-  deleteReview: () => import('@/server/handlers/admin/deleteReview'),
-  saveTestimonial: () => import('@/server/handlers/admin/saveTestimonial'),
-  deleteTestimonial: () => import('@/server/handlers/admin/deleteTestimonial'),
-  deleteSubscriber: () => import('@/server/handlers/admin/deleteSubscriber'),
-  deleteMessage: () => import('@/server/handlers/admin/deleteMessage'),
-  uploadImage: () => import('@/server/handlers/admin/uploadImage'),
+  overview: () => import('../src/server/handlers/admin/overview'),
+  listPlants: () => import('../src/server/handlers/admin/listPlants'),
+  getPlant: () => import('../src/server/handlers/admin/getPlant'),
+  listOrders: () => import('../src/server/handlers/admin/listOrders'),
+  getOrder: () => import('../src/server/handlers/admin/getOrder'),
+  listReviews: () => import('../src/server/handlers/admin/listReviews'),
+  listTestimonials: () => import('../src/server/handlers/admin/listTestimonials'),
+  listSubscribers: () => import('../src/server/handlers/admin/listSubscribers'),
+  listMessages: () => import('../src/server/handlers/admin/listMessages'),
+  createPlant: () => import('../src/server/handlers/admin/createPlant'),
+  updatePlant: () => import('../src/server/handlers/admin/updatePlant'),
+  deletePlant: () => import('../src/server/handlers/admin/deletePlant'),
+  updateOrderStatus: () => import('../src/server/handlers/admin/updateOrderStatus'),
+  deleteReview: () => import('../src/server/handlers/admin/deleteReview'),
+  saveTestimonial: () => import('../src/server/handlers/admin/saveTestimonial'),
+  deleteTestimonial: () => import('../src/server/handlers/admin/deleteTestimonial'),
+  deleteSubscriber: () => import('../src/server/handlers/admin/deleteSubscriber'),
+  deleteMessage: () => import('../src/server/handlers/admin/deleteMessage'),
+  uploadImage: () => import('../src/server/handlers/admin/uploadImage'),
 };
 
 function getRoute(request: Request) {
@@ -45,4 +45,5 @@ export default async function handler(request: Request) {
     return fail((error as Error).message || 'Internal server error', 500);
   }
 }
+
 
