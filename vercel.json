@@ -1,5 +1,19 @@
 {
   "framework": "vite",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/api/auth/:route*",
+      "destination": "/api/auth?route=:route*"
+    },
+    {
+      "source": "/api/nursery/:route*",
+      "destination": "/api/nursery?route=:route*"
+    },
+    {
+      "source": "/api/admin/:route*",
+      "destination": "/api/admin?route=:route*"
+    }
+  ]
 }
 
