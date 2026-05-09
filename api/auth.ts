@@ -33,11 +33,11 @@ async function webHandler(request: Request) {
 }
 
 export default async function handler(requestOrReq: Request | unknown, res?: unknown) {
-  if (requestOrReq instanceof Request || !res) {
-    return webHandler(requestOrReq as Request);
+  if (res) {
+    return runWebHandler(requestOrReq as never, res as never, webHandler);
   }
 
-  return runWebHandler(requestOrReq as never, res as never, webHandler);
+  return webHandler(requestOrReq as Request);
 }
 
 

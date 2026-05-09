@@ -1,8 +1,12 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import { Request as UndiciRequest } from 'undici';
 import { fail } from './http';
 
 type NodeRequest = IncomingMessage & { body?: unknown };
 type WebHandler = (request: Request) => Promise<Response>;
+
+const RequestCtor: typeof Request =
+  globalThis.Request ?? (UndiciRequest as unknown as typeof Request);
 
 function toWebRequest(req: NodeRequest): Request {
   const protocolHeader = req.headers['x-forwarded-proto'];
@@ -32,7 +36,7 @@ function toWebRequest(req: NodeRequest): Request {
     }
   }
 
-  return new Request(url, { method, headers, body });
+  return new RequestCtor(url, { method, headers, body });
 }
 
 async function writeWebResponse(res: ServerResponse, response: Response) {
