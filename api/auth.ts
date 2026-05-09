@@ -1,6 +1,10 @@
 import { fail } from '../src/server/lib/http';
 import { runWebHandler } from '../src/server/lib/vercel';
 
+export const config = {
+  runtime: 'nodejs',
+};
+
 type RouteHandler = (request: Request) => Promise<Response>;
 type RouteLoader = () => Promise<{ default: RouteHandler }>;
 
