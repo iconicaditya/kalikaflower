@@ -99,7 +99,7 @@ export async function loginWithPassword(args: { email: string; password: string 
   return apiRequest<{ ok: true; user: SessionShape['user'] }>('/api/auth/login', args);
 }
 
-export async function signupWithPassword(args: { email: string; password: string }) {
+export async function signupWithPassword(args: { email: string; password: string; fullName?: string }) {
   return apiRequest<{ ok: true; user: SessionShape['user'] }>('/api/auth/signup', args);
 }
 

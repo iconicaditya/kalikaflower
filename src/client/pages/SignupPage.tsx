@@ -11,15 +11,20 @@ export default function SignupPage() {
   const handleSubmit = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const fd = new FormData(event.currentTarget);
+    const fullName = String(fd.get('fullName') ?? '').trim();
     const email = String(fd.get('email'));
     const password = String(fd.get('password'));
     const confirmPassword = String(fd.get('confirmPassword'));
+    if (!fullName) {
+      toast.error('Full Name is required');
+      return;
+    }
     if (password !== confirmPassword) {
       toast.error('Passwords do not match');
       return;
     }
     try {
-      await signupWithPassword({ email, password });
+      await signupWithPassword({ fullName, email, password });
       setSuccess(true);
     } catch (e) {
       toast.error((e as Error).message);
@@ -52,6 +57,7 @@ export default function SignupPage() {
               <h1 className="font-display text-4xl md:text-5xl text-forest text-center mb-10 leading-[1.05]">Begin your garden.</h1>
 
               <form onSubmit={handleSubmit} className="space-y-5">
+                <Field label="Full Name" name="fullName" type="text" />
                 <Field label="Email" name="email" type="email" />
                 <Field label="Password" name="password" type="password" />
                 <Field label="Confirm Password" name="confirmPassword" type="password" />

@@ -11,6 +11,7 @@ export async function runMigrations() {
         id uuid primary key default gen_random_uuid(),
         handle text not null unique,
         password_hash text not null,
+        full_name text,
         first_name text,
         last_name text,
         avatar_url text,
@@ -18,6 +19,11 @@ export async function runMigrations() {
         created_at timestamptz not null default now(),
         updated_at timestamptz not null default now()
       );
+    `;
+
+    await tx`
+      alter table users
+      add column if not exists full_name text;
     `;
 
     await tx`

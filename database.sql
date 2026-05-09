@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS users (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   handle text NOT NULL UNIQUE,
   password_hash text NOT NULL,
+  full_name text,
   first_name text,
   last_name text,
   avatar_url text,
@@ -28,6 +29,9 @@ CREATE TABLE IF NOT EXISTS users (
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
 );
+
+ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS full_name text;
 
 CREATE TABLE IF NOT EXISTS plants (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
