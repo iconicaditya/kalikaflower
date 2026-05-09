@@ -1,9 +1,14 @@
-import { Response as UndiciResponse } from 'undici';
+function getResponseCtor(): typeof Response {
+  if (!globalThis.Response) {
+    throw new Error('Response API is not available in this runtime');
+  }
 
-const ResponseCtor: typeof Response =
-  globalThis.Response ?? (UndiciResponse as unknown as typeof Response);
+  return globalThis.Response;
+}
 
 export function ok<T>(data: T, init?: ResponseInit): Response {
+  const ResponseCtor = getResponseCtor();
+
   return new ResponseCtor(JSON.stringify(data), {
     status: init?.status ?? 200,
     headers: {
@@ -15,6 +20,8 @@ export function ok<T>(data: T, init?: ResponseInit): Response {
 }
 
 export function fail(message: string, status = 400, init?: ResponseInit): Response {
+  const ResponseCtor = getResponseCtor();
+
   return new ResponseCtor(JSON.stringify({ error: message }), {
     status,
     headers: {

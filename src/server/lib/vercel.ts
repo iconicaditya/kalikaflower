@@ -1,12 +1,15 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { Request as UndiciRequest } from 'undici';
-import { fail } from './http';
 
 type NodeRequest = IncomingMessage & { body?: unknown };
 type WebHandler = (request: Request) => Promise<Response>;
 
-const RequestCtor: typeof Request =
-  globalThis.Request ?? (UndiciRequest as unknown as typeof Request);
+function getRequestCtor(): typeof Request {
+  if (!globalThis.Request) {
+    throw new Error('Request API is not available in this runtime');
+  }
+
+  return globalThis.Request;
+}
 
 function toWebRequest(req: NodeRequest): Request {
   const protocolHeader = req.headers['x-forwarded-proto'];
@@ -36,6 +39,7 @@ function toWebRequest(req: NodeRequest): Request {
     }
   }
 
+  const RequestCtor = getRequestCtor();
   return new RequestCtor(url, { method, headers, body });
 }
 
@@ -55,8 +59,13 @@ export async function runWebHandler(req: NodeRequest, res: ServerResponse, handl
     const webResponse = await handler(webRequest);
     await writeWebResponse(res, webResponse);
   } catch (error) {
-    const fallback = fail((error as Error).message || 'Internal server error', 500);
-    await writeWebResponse(res, fallback);
+    res.statusCode = 500;
+    res.setHeader('content-type', 'application/json; charset=utf-8');
+    res.end(
+      JSON.stringify({
+        error: (error as Error).message || 'Internal server error',
+      }),
+    );
   }
 }
 
