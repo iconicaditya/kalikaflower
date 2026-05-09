@@ -1,4 +1,5 @@
 import { fail } from '../src/server/lib/http';
+import { runWebHandler } from '../src/server/lib/vercel';
 
 type RouteHandler = (request: Request) => Promise<Response>;
 type RouteLoader = () => Promise<{ default: RouteHandler }>;
@@ -15,7 +16,7 @@ function getRoute(request: Request) {
   return route.trim().replace(/^\/+|\/+$/g, '');
 }
 
-export default async function handler(request: Request) {
+async function webHandler(request: Request) {
   try {
     const route = getRoute(request);
     const routeLoader = ROUTES[route];
@@ -29,6 +30,14 @@ export default async function handler(request: Request) {
   } catch (error) {
     return fail((error as Error).message || 'Internal server error', 500);
   }
+}
+
+export default async function handler(requestOrReq: Request | unknown, res?: unknown) {
+  if (requestOrReq instanceof Request || !res) {
+    return webHandler(requestOrReq as Request);
+  }
+
+  return runWebHandler(requestOrReq as never, res as never, webHandler);
 }
 
 
