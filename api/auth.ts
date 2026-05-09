@@ -1,16 +1,13 @@
 import { fail } from '@/server/lib/http';
-import login from '@/server/handlers/auth/login';
-import logout from '@/server/handlers/auth/logout';
-import session from '@/server/handlers/auth/session';
-import signup from '@/server/handlers/auth/signup';
 
 type RouteHandler = (request: Request) => Promise<Response>;
+type RouteLoader = () => Promise<{ default: RouteHandler }>;
 
-const ROUTES: Record<string, RouteHandler> = {
-  login,
-  signup,
-  session,
-  logout,
+const ROUTES: Record<string, RouteLoader> = {
+  login: () => import('@/server/handlers/auth/login'),
+  signup: () => import('@/server/handlers/auth/signup'),
+  session: () => import('@/server/handlers/auth/session'),
+  logout: () => import('@/server/handlers/auth/logout'),
 };
 
 function getRoute(request: Request) {
@@ -19,13 +16,18 @@ function getRoute(request: Request) {
 }
 
 export default async function handler(request: Request) {
-  const route = getRoute(request);
-  const routeHandler = ROUTES[route];
+  try {
+    const route = getRoute(request);
+    const routeLoader = ROUTES[route];
 
-  if (!routeHandler) {
-    return fail('Not found', 404);
+    if (!routeLoader) {
+      return fail('Not found', 404);
+    }
+
+    const routeModule = await routeLoader();
+    return routeModule.default(request);
+  } catch (error) {
+    return fail((error as Error).message || 'Internal server error', 500);
   }
-
-  return routeHandler(request);
 }
 

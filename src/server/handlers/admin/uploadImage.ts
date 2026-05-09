@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
-import { env } from '@/server/lib/env';
+import { requireCloudinaryEnv } from '@/server/lib/env';
 import { fail, ok } from '@/server/lib/http';
 import { parseBody, requireAdminRequest } from './_lib';
 
@@ -8,14 +8,15 @@ type Body = {
   folder?: string;
 };
 
-cloudinary.config({
-  cloud_name: env.CLOUDINARY_CLOUD_NAME,
-  api_key: env.CLOUDINARY_API_KEY,
-  api_secret: env.CLOUDINARY_API_SECRET,
-});
-
 export default async function handler(request: Request) {
   try {
+    const cloudinaryEnv = requireCloudinaryEnv();
+    cloudinary.config({
+      cloud_name: cloudinaryEnv.cloudName,
+      api_key: cloudinaryEnv.apiKey,
+      api_secret: cloudinaryEnv.apiSecret,
+    });
+
     await requireAdminRequest(request);
     const body = await parseBody<Body>(request);
 

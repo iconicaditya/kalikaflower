@@ -1,34 +1,22 @@
 import { fail } from '@/server/lib/http';
-import addToCart from '@/server/handlers/nursery/addToCart';
-import clearCart from '@/server/handlers/nursery/clearCart';
-import getCart from '@/server/handlers/nursery/getCart';
-import getPlant from '@/server/handlers/nursery/getPlant';
-import getReviews from '@/server/handlers/nursery/getReviews';
-import listPlants from '@/server/handlers/nursery/listPlants';
-import listTestimonials from '@/server/handlers/nursery/listTestimonials';
-import placeOrder from '@/server/handlers/nursery/placeOrder';
-import relatedPlants from '@/server/handlers/nursery/relatedPlants';
-import sendContact from '@/server/handlers/nursery/sendContact';
-import submitReview from '@/server/handlers/nursery/submitReview';
-import subscribeNewsletter from '@/server/handlers/nursery/subscribeNewsletter';
-import updateCartItem from '@/server/handlers/nursery/updateCartItem';
 
 type RouteHandler = (request: Request) => Promise<Response>;
+type RouteLoader = () => Promise<{ default: RouteHandler }>;
 
-const ROUTES: Record<string, RouteHandler> = {
-  listPlants,
-  getPlant,
-  relatedPlants,
-  getReviews,
-  listTestimonials,
-  getCart,
-  addToCart,
-  updateCartItem,
-  clearCart,
-  submitReview,
-  placeOrder,
-  subscribeNewsletter,
-  sendContact,
+const ROUTES: Record<string, RouteLoader> = {
+  listPlants: () => import('@/server/handlers/nursery/listPlants'),
+  getPlant: () => import('@/server/handlers/nursery/getPlant'),
+  relatedPlants: () => import('@/server/handlers/nursery/relatedPlants'),
+  getReviews: () => import('@/server/handlers/nursery/getReviews'),
+  listTestimonials: () => import('@/server/handlers/nursery/listTestimonials'),
+  getCart: () => import('@/server/handlers/nursery/getCart'),
+  addToCart: () => import('@/server/handlers/nursery/addToCart'),
+  updateCartItem: () => import('@/server/handlers/nursery/updateCartItem'),
+  clearCart: () => import('@/server/handlers/nursery/clearCart'),
+  submitReview: () => import('@/server/handlers/nursery/submitReview'),
+  placeOrder: () => import('@/server/handlers/nursery/placeOrder'),
+  subscribeNewsletter: () => import('@/server/handlers/nursery/subscribeNewsletter'),
+  sendContact: () => import('@/server/handlers/nursery/sendContact'),
 };
 
 function getRoute(request: Request) {
@@ -37,13 +25,18 @@ function getRoute(request: Request) {
 }
 
 export default async function handler(request: Request) {
-  const route = getRoute(request);
-  const routeHandler = ROUTES[route];
+  try {
+    const route = getRoute(request);
+    const routeLoader = ROUTES[route];
 
-  if (!routeHandler) {
-    return fail('Not found', 404);
+    if (!routeLoader) {
+      return fail('Not found', 404);
+    }
+
+    const routeModule = await routeLoader();
+    return routeModule.default(request);
+  } catch (error) {
+    return fail((error as Error).message || 'Internal server error', 500);
   }
-
-  return routeHandler(request);
 }
 
